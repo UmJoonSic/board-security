@@ -1,0 +1,28 @@
+server:
+  servlet:
+    session:
+      tracking-modes: cookie
+  port: 9000
+  error:
+    whitelabel:
+      enabled: true
+#    include-exception: true
+#    include-message: always
+#    include-stacktrace: always
+
+spring:
+  datasource:
+    url: jdbc:oracle:thin:@localhost:1521:xe
+    username: board
+    password: 1234
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+  servlet:
+    multipart:
+      max-file-size:
+        1MB
+      max-request-size:
+        10MB
+mybatis:
+#  type-aliases-package: com.example.board.model
+  config-location: classpath:config/mybatis-config.xml
+  mapper-locations: classpath:mapper/**/*.xml

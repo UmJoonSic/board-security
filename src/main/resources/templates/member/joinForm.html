@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>회원가입</title>
+  <link rel="stylesheet" href="/css/default.css">
+</head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+	
+	// 체크에 걸렸을때 : alert("메시지"), 포커스
+	function formCheck() {
+		
+		// 아이디 체크 (4 ~ 20자 사이)
+		let member_id = $("#member_id");
+		if(member_id.val().length < 4 || member_id.val().length > 20){
+			alert("아이디는 4자에서 20자 사이로 입력해주세요");
+			member_id.focus();
+			return false;
+		}
+		
+		// 패스워드 체크(4 ~ 20자 사이)
+		let password = $("#password");
+		if(password.val().length < 4 || password.val().length > 20){
+			alert("비밀번호는 4자에서 20자 사이로 입력해주세요");
+			password.focus();
+			return false;
+		}
+		
+		// 이름 체크(공백이 아님)
+		let name = $("#name");
+		if(name.val() == "") {
+			alert("이름을 입력해주세요");
+			name.focus();
+			return false;
+		}
+		
+		// 성별 체크확인
+		let gender = $(":input[name = 'gender']:checked");
+		if(gender.length < 1) {
+			alert("성별을 선택해주세요");
+			return false;
+		}
+		
+		// 생년월일 체크
+		let birth = $("#birth");
+		if(birth.val() == ""){
+			alert("생년월일을 선택하세요");
+			birth.focus();
+			return false;
+		}
+		
+		// 현재 날짜 시간
+		let now = new Date();
+		// 사용자가 선택한 날짜를 받아서 날짜객체 생성
+		let birthDate = new Date(birth.val());
+		if(now < birthDate) {
+			alert("생년월일은 오늘 이전이어야 합니다");
+			birth.focus();
+			return false;
+		}
+		
+		// 이메일 체크
+		let email = $("#email");
+		if(email.val() == ""){
+			alert("이메일을 입력하세요");
+			email.focus();
+			return false;
+		}
+		
+		return false;
+	}
+</script>
+<body>
+<div id="container">
+  <h1>[ 회원가입 ]</h1>
+  <form action="join" method="post" th:object=${joinForm} onsubmit="formCheck()">
+  	<div th:if="${#fields.hasGlobalErrors()}">
+  	  <p class="error" th:each="err : ${#fields.globalErrors}" th:text="${err}">
+  	</div>
+	<table>
+	  <tr>
+	    <th>아이디</th>
+	    <td>
+	      <input type="text" th:field="*{member_id}">
+	      <div class="error" th:errors="*{member_id}"></div>
+	    </td>
+	  </tr>
+	  <tr>
+	    <th>비밀번호</th>
+	    <td>
+	      <input type="password" th:field="*{password}">
+	      <div class="error" th:errors="*{password}"></div>
+	    </td>
+	  </tr>
+	  <tr>
+	    <th>이름</th>
+	    <td>
+	      <input type="text" th:field="*{name}">
+	      <div class="error" th:errors="*{name}"></div>
+	    </td>
+	  </tr>
+	  <tr>
+	    <th>성별</th>
+	    <td>
+	      <!-- <label for="gender1">남성</label>
+	      <input type="radio" th:field="*{gender}" value="MALE">
+	      <label for="gender2">여성</label>
+	      <input type="radio" th:field="*{gender}" value="FEMALE"> -->
+	      <th:block th:each="gender : ${T(com.example.board.model.member.GenderType).values()}">
+	        <label th:for="${#ids.next('gender')}" th:text="${gender.description}"></label>
+	        <input type="radio" th:field="*{gender}" th:value="${gender}">
+	      </th:block>
+	      <div class="error" th:errors="*{gender}"></div>
+	    </td>
+	  </tr>
+	  <tr>
+	    <th>생년월일</th>
+	    <td>
+	      <input type="date" th:field="*{birth}">
+	      <div class="error" th:errors="*{birth}"></div>
+	    </td>
+	  </tr>
+	  <tr>
+	    <th>이메일</th>
+	    <td><input type="text" th:field="*{email}"></td>
+	  </tr>
+	</table>
+	<p>
+	<div class="center">
+	  <input type="button" onclick="location.href='/'" value="메인으로">
+	  <input type="submit" value="가입하기">
+	  <input type="reset" value="다시작성">
+	</div>
+  </form>
+</div>
+</body>
+</html>

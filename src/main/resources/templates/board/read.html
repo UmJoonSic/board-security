@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 읽기</title>
+    <link rel="stylesheet" href="/css/default.css">
+</head>
+<body>
+<div id="container">
+  <h1>[ 게시판 - 글 읽기 ]</h1>
+    <table th:object="${board}">
+      <tr>
+        <th>제목</th>
+        <td th:text="*{title}"></td>
+      </tr>
+      <tr>
+        <th>내용</th>
+        <td th:text="*{contents}"></td>
+      </tr>
+      <tr>
+        <th>조회수</th>
+        <td th:text="*{hit}"></td>
+      </tr>
+      <tr>
+        <th>작성일</th>
+        <td th:text="${#temporals.format(board.created_time, 'yyyy-MM-dd HH:mm')}"></td>
+      </tr>
+      <tr>
+        <th>작성자</th>
+        <td th:text="*{member_id}"></td>
+      </tr>
+      <tr>
+        <th>첨부파일</th>
+        <td>
+					<a th:if="${file}" th:text="${file.original_filename}" 
+						 th:href="@{/board/download/{id}(id=${file.attached_file_id})}"></a>
+				</td>
+      </tr>
+    </table>
+    <p>
+    <div class="center">
+     <input type="button" onclick="location.href='/board/list'" value="목록으로">
+      <th:block th:if="${session.loginMember.member_id == board.member_id}">
+        <input type="button" th:onclick="|location.href='/board/update?board_id=${board.board_id}'|" value="수정하기">
+        <input type="button" th:onclick="|location.href='/board/delete?board_id=${board.board_id}'|" value="삭제하기">
+      </th:block>
+  </div>
+</div>
+</body>
+</html>
